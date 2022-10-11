@@ -25,4 +25,3 @@ print("What stat")
 statName = input()
 final = Function.getSepcificStat(stats, statName)
 print(final)
-
