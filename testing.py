@@ -21,12 +21,15 @@ def getdata():
     ##print ("type name of player2")
     ##name2 = input()
     ##print("type career or season")
-    careerOrSeason = 'career'
+    careerOrSeason = 'season'
     ##print("type hitting or pitching")
     pos = 'hitting'
 
     stats = Function.getplayer(name, careerOrSeason, pos)
+    final = Function.getSepcificStatNum(stats, "homeRuns")
+    Function.compareToAverage("Aaron Judge", "Anthony Rizzo", "Kyle Higashioka")
     print(stats)
+    print(final)
 
     return stats
     ##for team in statsapi.lookup_team('ny'):
