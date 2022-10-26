@@ -27,7 +27,8 @@ def getdata():
 
     stats = Function.getplayer(name, careerOrSeason, pos)
     final = Function.getSepcificStatNum(stats, "homeRuns")
-    Function.compareToAverage("Aaron Judge", "Anthony Rizzo", "Kyle Higashioka")
+    testing = ["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"]
+    Function.createLinup(testing)
     print(stats)
     print(final)
 
