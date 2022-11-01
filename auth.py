@@ -1,5 +1,6 @@
 # This file is used for setting up web pages, all addresses should be put here
 from flask import Flask, render_template, Blueprint, redirect, url_for, request
+from testing import getdata
 from app import db
 
 auth = Blueprint('auth', __name__)
@@ -8,7 +9,15 @@ auth = Blueprint('auth', __name__)
 # use decorators to link the function to a url
 @auth.route('/')
 def index():
-    return render_template('index.html')  # return a string
+    stat_dict = getdata()
+    fullname = stat_dict['first_name'] + " " + stat_dict['last_name']
+    stat_dict = stat_dict['stats'][0]['stats']
+    gamesPlayed = stat_dict['gamesPlayed']
+    batAvg = stat_dict['avg']
+    hr = stat_dict['homeRuns']
+    so = stat_dict['strikeOuts']
+    RBI = stat_dict['rbi']
+    return render_template('index.html', name = fullname, gamePlay = gamesPlayed, AVG = batAvg,homeRun = hr, SO =so, rbi = RBI)  # return a string
 
 @auth.route('/welcome')
 def welcome():
