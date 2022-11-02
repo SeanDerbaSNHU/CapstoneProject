@@ -1,7 +1,8 @@
 # This file is used for setting up web pages, all addresses should be put here
 from flask import Flask, render_template, Blueprint, redirect, url_for, request
 from testing import getdata
-from app import db
+from Function import createLinup
+
 
 auth = Blueprint('auth', __name__)
 
@@ -19,6 +20,7 @@ def index():
     RBI = stat_dict['rbi']
     return render_template('index.html', name = fullname, gamePlay = gamesPlayed, AVG = batAvg,homeRun = hr, SO =so, rbi = RBI)  # return a string
 
+
 @auth.route('/welcome')
 def welcome():
     return render_template('welcome.html')  # render a template
@@ -34,14 +36,24 @@ def login():
             return redirect('/welcome')
     return render_template('login.html', error=error)
 
+
 @auth.route('/register')
 def register():
+    from app import db
     return render_template('register.html')
+
 
 @auth.route('/logout')
 def logout():
     return 'Logout'
 
+
 @auth.route('/profile')
 def profile():
     return render_template('profile.html')
+
+
+@auth.route('/lineup')
+def lineup():
+    players = createLinup(["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"])
+    return render_template('lineup.html', player1 = players[0], player2 = players[1], player3 = players[2], player4 = players[3], player5 = players[4], player6 = players[5], player7 = players[6], player8 = players[7], player9 = players[8])
