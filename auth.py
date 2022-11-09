@@ -1,7 +1,7 @@
 # This file is used for setting up web pages, all addresses should be put here
 from flask import Flask, render_template, Blueprint, redirect, url_for, request
 from testing import getdata
-from Function import createLinup
+from Function import createLinup, getplayerCareer
 
 
 auth = Blueprint('auth', __name__)
@@ -53,7 +53,20 @@ def profile():
     return render_template('profile.html')
 
 
-@auth.route('/lineup')
+@auth.route('/lineup', methods=['GET', 'POST'])
 def lineup():
-    players = createLinup(["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"])
-    return render_template('lineup.html', player1 = players[0], player2 = players[1], player3 = players[2], player4 = players[3], player5 = players[4], player6 = players[5], player7 = players[6], player8 = players[7], player9 = players[8])
+    #players = createLinup(["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"])
+    #return render_template('lineup.html', player1 = players[0], player2 = players[1], player3 = players[2], player4 = players[3], player5 = players[4], player6 = players[5], player7 = players[6], player8 = players[7], player9 = players[8])
+    error = None
+    if request.method == 'POST':
+        pName = request.form['playerName']
+        stats = getplayerCareer(pName)
+        fullname = stats['first_name'] + " " + stats['last_name']
+        stats = stats['stats'][0]['stats']
+        gamesPlayed = stats['gamesPlayed']
+        batAvg = stats['avg']
+        hr = stats['homeRuns']
+        so = stats['strikeOuts']
+        RBI = stats['rbi']
+        return render_template('lineup.html', error = error, name = fullname, gamesPlayed = gamesPlayed, batAvg = batAvg, homeruns = hr, strikeouts = so, rbi = RBI)
+    return render_template('lineup.html', error = error)

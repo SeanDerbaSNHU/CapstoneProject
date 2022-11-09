@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 {% extends "base.html" %}
 {% block content %}
-<html>
-<style>
-</style>
-<body>
-
-    <h1>{{player1}}</h1>
-    <h1>{{player2}}</h1>
-    <h1>{{player3}}</h1>
-    <h1>{{player4}}</h1>
-    <h1>{{player5}}</h1>
-    <h1>{{player6}}</h1>
-    <h1>{{player7}}</h1>
-    <h1>{{player8}}</h1>
-    <h1>{{player9}}</h1>
-
-</body>
-</html>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Player Look Up</h3>
+    <div class="box">
+        <form method="POST" action="/lineup">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="playerName" name="playerName" placeholder="Player's Name" autofocus="">
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth">Submit</button>
+            <h1>Name: {{name}}  Games Played: {{gamesPlayed}}  Batting Average: {{batAvg}}  Homeruns: {{homeruns}}  Strikeouts: {{strikeouts}}  RBI:  {{rbi}}</h1>
+        </form>
+    </div>
+</div>
 {% endblock %}
