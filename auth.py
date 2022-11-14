@@ -58,6 +58,7 @@ def lineup():
     #players = createLinup(["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"])
     #return render_template('lineup.html', player1 = players[0], player2 = players[1], player3 = players[2], player4 = players[3], player5 = players[4], player6 = players[5], player7 = players[6], player8 = players[7], player9 = players[8])
     error = None
+    pList = []
     if request.method == 'POST':
         pName = request.form['playerName']
         stats = getplayerCareer(pName)
@@ -68,5 +69,11 @@ def lineup():
         hr = stats['homeRuns']
         so = stats['strikeOuts']
         RBI = stats['rbi']
+        pList.append([pName, fullname, gamesPlayed, batAvg, hr, so, RBI])
         return render_template('lineup.html', error = error, name = fullname, gamesPlayed = gamesPlayed, batAvg = batAvg, homeruns = hr, strikeouts = so, rbi = RBI)
     return render_template('lineup.html', error = error)
+
+
+@auth.route('/standings')
+def standings():
+    return render_template('standings.html')
