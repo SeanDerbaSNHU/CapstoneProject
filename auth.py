@@ -53,24 +53,76 @@ def profile():
     return render_template('profile.html')
 
 
+pTemp = 'test'
+pList = []
+
+
 @auth.route('/lineup', methods=['GET', 'POST'])
 def lineup():
     #players = createLinup(["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"])
     #return render_template('lineup.html', player1 = players[0], player2 = players[1], player3 = players[2], player4 = players[3], player5 = players[4], player6 = players[5], player7 = players[6], player8 = players[7], player9 = players[8])
     error = None
-    pList = []
+    #pList = []
+    pName = ''
+    fullname = ''
+    gamesPlayed = ''
+    batAvg = ''
+    hr = ''
+    so = ''
+    RBI = ''
+
     if request.method == 'POST':
-        pName = request.form['playerName']
-        stats = getplayerCareer(pName)
-        fullname = stats['first_name'] + " " + stats['last_name']
-        stats = stats['stats'][0]['stats']
-        gamesPlayed = stats['gamesPlayed']
-        batAvg = stats['avg']
-        hr = stats['homeRuns']
-        so = stats['strikeOuts']
-        RBI = stats['rbi']
-        pList.append([pName, fullname, gamesPlayed, batAvg, hr, so, RBI])
-        return render_template('lineup.html', error = error, name = fullname, gamesPlayed = gamesPlayed, batAvg = batAvg, homeruns = hr, strikeouts = so, rbi = RBI)
+        if request.form['btn_identifier'] == 'search':
+            pName = request.form['playerName']
+            stats = getplayerCareer(pName)
+            fullname = stats['first_name'] + " " + stats['last_name']
+            stats = stats['stats'][0]['stats']
+            gamesPlayed = stats['gamesPlayed']
+            batAvg = stats['avg']
+            hr = stats['homeRuns']
+            so = stats['strikeOuts']
+            RBI = stats['rbi']
+            global pTemp
+            pTemp = fullname
+            return render_template('lineup.html', error = error, name = fullname, gamesPlayed = gamesPlayed, batAvg = batAvg, homeruns = hr, strikeouts = so, rbi = RBI)
+        elif request.form['btn_identifier'] == 'add':
+            #pName = request.form['playerName']
+            #stats = getplayerCareer(pName)
+            #fullname = stats['first_name'] + " " + stats['last_name']
+            pList.append(pTemp)
+            if len(pList) == 1:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0])
+            elif len(pList) == 2:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1])
+            elif len(pList) == 3:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2])
+            elif len(pList) == 4:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3])
+            elif len(pList) == 5:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3], p5 = pList[4])
+            elif len(pList) == 6:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3], p5 = pList[4], p6 = pList[5])
+            elif len(pList) == 7:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3], p5 = pList[4],
+                                       p6 = pList[5], p7 = pList[6])
+            elif len(pList) == 8:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3], p5 = pList[4],
+                                       p6 = pList[5], p7 = pList[6], p8 = pList[7])
+            elif len(pList) == 9:
+                return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                       homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3], p5 = pList[4],
+                                       p6 = pList[5], p7 = pList[6], p8 = pList[7], p9 = pList[8])
+        else:
+            return render_template('lineup.html', error = error)
+
     return render_template('lineup.html', error = error)
 
 
