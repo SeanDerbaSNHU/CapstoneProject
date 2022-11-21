@@ -14,7 +14,8 @@ def getdata():
     formatter = logging.Formatter("%(asctime)s - %(levelname)8s - %(name)s(%(thread)s) - %(message)s")
     ch.setFormatter(formatter)
     rootLogger.addHandler(ch)
-    ##print(statsapi.standings(leagueId=104,date='10/1/2022') )
+    standings = Function.getStanding()
+    print(standings )
     ##print(statsapi.standings(leagueId=103, date='10/1/2022'))
     print ("type name of player1")
     name = 'Aaron Judge'
@@ -28,7 +29,7 @@ def getdata():
     stats = Function.getplayer(name, careerOrSeason, pos)
     final = Function.getSepcificStatNum(stats, "homeRuns")
     testing = ["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"]
-    Function.createLinup(testing)
+    ##Function.createLinup(testing)
     print(stats)
     print(final)
 
