@@ -1,4 +1,5 @@
 import statsapi
+from datetime import datetime
 import logging
 ##League year by year averages for 30 plate apperances(also the average)
 
@@ -13,8 +14,27 @@ BB = 3.09
 def getplayer(name, yearlyOrCareer, pos):
     #stat = statsapi.player_stats(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer)
     stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer, sportId=1)
+    #stat = stat.split()[7:]
+    return stat
+
+def getTeamId(teamName):
+    team = statsapi.lookup_team(teamName)
+    teamID = team[0]['id']
+    return teamID
+
+def getRoster(teamId):
+    roster = statsapi.roster(teamId, rosterType=None, season=datetime.now().year, date=None)
+    return roster
+
+def getTeam(teamName):
+    team = statsapi.lookup_team(teamName)
+    return team
+
+def getplayerCareer(name):
+    #stat = statsapi.player_stats(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer)
+    stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), "hitting", "career", sportId=1)
     #stat = stat.split()[7:];
-    return stat;
+    return stat
 
 
 def getplayerCareer(name):
@@ -33,12 +53,18 @@ def getSepcificStat(stats, statName):
     print(stats_dict.keys())
     final = statName + " :" + stats_dict[statName + ':']
     return final
+
 def getSepcificStatNum(stats, statName):
     stats
     fullname = stats['first_name'] + " " + stats['last_name']
     stats = stats['stats'][0]['stats']
     final = stats[statName]
     return final
+
+def getStanding(leagueId):
+    standings = statsapi.standings_data(leagueId, division="all", include_wildcard=True, season=None, standingsTypes=None, date=None)
+   ## standings = statsapi.standings(leagueId=103, date='10/1/2022')
+    return standings
 
 def compare(name1, name2, statName):
     p1 = getplayer(name1,"career", "hitting")
@@ -53,46 +79,45 @@ def compare(name1, name2, statName):
 
 
 def compareToAverage(testing):
-    p1Count = 0
-    p2Count = 0
-    p3Count = 0
+    BasePlyer = [AVG, SB, HR, RBI, BB]
+    p1Count = p2Count = p3Count = p4Count = p5Count = p6Count = p7Count = p8Count = p9Count = 0
+    differnce1 = differnce2 = differnce3 = differnce4 = differnce5 = differnce6 = differnce7 = differnce8 = differnce9 = 0
+    statIndex =["avg","baseOnBalls","stolenBases","caughtStealing"]
+    diffList = [differnce1,differnce2,differnce3,differnce4,differnce5,differnce6,differnce7,differnce8,differnce9]
+    countList =[p1Count, p2Count,p3Count,p4Count,p5Count,p6Count,p7Count,p8Count,p9Count]
     editedList = [None] * 8
     output = [editedList,"string"]
     p1 = getplayer(testing[0], "season", "hitting")
-    p1_stat = float(getSepcificStatNum(p1, "avg"))
     p2 = getplayer(testing[1], "season", "hitting")
-    p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(testing[2], "season", "hitting")
-    p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
-    p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
-    p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
-    p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
-    differnce1 = differnce1 + (p1_stat - BB)
-    differnce2 += differnce2 + (p2_stat - BB)
-    differnce3 +=  differnce3 + (p3_stat - BB)
-    p1_stat = float(getSepcificStatNum(p1, "stolenBases"))
-    p2_stat = float(getSepcificStatNum(p2, "stolenBases"))
-    p3_stat = float(getSepcificStatNum(p3, "stolenBases"))
-    differnce1 = differnce1 + (p1_stat - SB)*2
-    differnce2 = differnce2 + (p2_stat - SB)*2
-    differnce3 = differnce3 + (p3_stat - SB)*2
-    p1_stat = float(getSepcificStatNum(p1, "caughtStealing"))
-    p2_stat = float(getSepcificStatNum(p2, "caughtStealing"))
-    p3_stat = float(getSepcificStatNum(p3, "caughtStealing"))
-    differnce1 = differnce1 - p1_stat
-    differnce2 = differnce2 - p2_stat
-    differnce3 = differnce3 - p3_stat
-    p1Count += (differnce1)
-    p2Count += (differnce2)
-    p3Count += (differnce3)
-    playerDiffList = [p1Count,p2Count,p3Count]
-    biggest = max(playerDiffList)
-    first = playerDiffList.index(biggest)
+    p4 = getplayer(testing[3], "season", "hitting")
+    p5 = getplayer(testing[4], "season", "hitting")
+    p6 = getplayer(testing[5], "season", "hitting")
+    p7 = getplayer(testing[6], "season", "hitting")
+    p8 = getplayer(testing[7], "season", "hitting")
+    p9 = getplayer(testing[8], "season", "hitting")
+    p1_stat = p2_stat = p3_stat = p4_stat = p5_stat = p6_stat = p7_stat = p8_stat = p9_stat = 0.0
+    playerList = [p1,p2,p3,p4,p5,p6,p7,p8,p9]
+    playerStatList = [p1_stat, p2_stat, p3_stat, p4_stat, p5_stat, p6_stat, p7_stat, p8_stat, p9_stat]
+    holder = 0;
+    for x in statIndex:
+        index = 0
+        for y in playerList:
+            playerStatList[index] = float(getSepcificStatNum(playerList[index], statIndex[holder]))
+            if(statIndex[holder] != "caughtStealing"):
+                diffList[index] = diffList[index] + (playerStatList[index] - BasePlyer[holder])
+            else:
+                diffList[index] = diffList[index] - playerStatList[index]
+            print(diffList)
+            print("index" + str(index))
+            index = index + 1
+        countList += diffList
+        holder = holder + 1
+    countList = diffList
+    biggest = max(countList)
+    first = countList.index(biggest)
     firstPerson = testing[first]
-    print(str(p1Count) + " " + str(p2Count) + " " + str(p3Count))
+    print(countList)
     i = 0
     j = 0
     for x in range(9):
@@ -112,28 +137,62 @@ def second(input):
     p1Count = 0
     p2Count = 0
     p3Count = 0
+    p4Count = 0
+    p5Count = 0
+    p6Count = 0
+    p7Count = 0
+    p8Count = 0
     editedList = [None] * 7
-    output = [editedList,"string"]
-    print(input)
+    output = [editedList, "string"]
     p1 = getplayer(input[0], "season", "hitting")
     p1_stat = float(getSepcificStatNum(p1, "avg"))
     p2 = getplayer(input[1], "season", "hitting")
     p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(input[2], "season", "hitting")
     p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
+    p4 = getplayer(input[3], "season", "hitting")
+    p4_stat = float(getSepcificStatNum(p4, "avg"))
+    p5 = getplayer(input[4], "season", "hitting")
+    p5_stat = float(getSepcificStatNum(p5, "avg"))
+    p6 = getplayer(input[5], "season", "hitting")
+    p6_stat = float(getSepcificStatNum(p6, "avg"))
+    p7 = getplayer(input[6], "season", "hitting")
+    p7_stat = float(getSepcificStatNum(p7, "avg"))
+    p8 = getplayer(input[7], "season", "hitting")
+    p8_stat = float(getSepcificStatNum(p8, "avg"))
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
+    differnce3 = (p3_stat - AVG) * 100
+    differnce4 = (p4_stat - AVG) * 100
+    differnce5 = (p5_stat - AVG) * 100
+    differnce6 = (p6_stat - AVG) * 100
+    differnce7 = (p7_stat - AVG) * 100
+    differnce8 = (p8_stat - AVG) * 100
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
     p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
+    p4_stat = float(getSepcificStatNum(p4, "baseOnBalls"))
+    p5_stat = float(getSepcificStatNum(p5, "baseOnBalls"))
+    p6_stat = float(getSepcificStatNum(p6, "baseOnBalls"))
+    p7_stat = float(getSepcificStatNum(p7, "baseOnBalls"))
+    p8_stat = float(getSepcificStatNum(p8, "baseOnBalls"))
     differnce1 = differnce1 + (p1_stat - BB)
-    differnce2 += differnce2 + (p2_stat - BB)
-    differnce3 += differnce3 + (p3_stat - BB)
+    differnce2 = differnce2 + (p2_stat - BB)
+    differnce3 = differnce3 + (p3_stat - BB)
+    differnce4 = differnce4 + (p4_stat - BB)
+    differnce5 = differnce5 + (p5_stat - BB)
+    differnce6 = differnce6 + (p6_stat - BB)
+    differnce7 = differnce7 + (p7_stat - BB)
+    differnce8 = differnce8 + (p8_stat - BB)
     p1Count += (differnce1)
     p2Count += (differnce2)
     p3Count += (differnce3)
-    playerDiffList = [p1Count, p2Count, p3Count]
+    p4Count += (differnce4)
+    p5Count += (differnce5)
+    p6Count += (differnce6)
+    p7Count += (differnce7)
+    p8Count += (differnce8)
+    playerDiffList = [p1Count,p2Count,p3Count,p4Count,p5Count,p6Count,p7Count,p8Count]
     biggest = max(playerDiffList)
     first = playerDiffList.index(biggest)
     firstPerson = input[first]
@@ -158,39 +217,83 @@ def third(input):
     p1Count = 0
     p2Count = 0
     p3Count = 0
+    p4Count = 0
+    p5Count = 0
+    p6Count = 0
+    p7Count = 0
     editedList = [None] * 6
-    output = [editedList,"string"]
+    output = [editedList, "string"]
     p1 = getplayer(input[0], "season", "hitting")
     p1_stat = float(getSepcificStatNum(p1, "avg"))
     p2 = getplayer(input[1], "season", "hitting")
     p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(input[2], "season", "hitting")
     p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
+    p4 = getplayer(input[3], "season", "hitting")
+    p4_stat = float(getSepcificStatNum(p4, "avg"))
+    p5 = getplayer(input[4], "season", "hitting")
+    p5_stat = float(getSepcificStatNum(p5, "avg"))
+    p6 = getplayer(input[5], "season", "hitting")
+    p6_stat = float(getSepcificStatNum(p6, "avg"))
+    p7 = getplayer(input[6], "season", "hitting")
+    p7_stat = float(getSepcificStatNum(p7, "avg"))
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
+    differnce3 = (p3_stat - AVG) * 100
+    differnce4 = (p4_stat - AVG) * 100
+    differnce5 = (p5_stat - AVG) * 100
+    differnce6 = (p6_stat - AVG) * 100
+    differnce7 = (p7_stat - AVG) * 100
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
     p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
+    p4_stat = float(getSepcificStatNum(p4, "baseOnBalls"))
+    p5_stat = float(getSepcificStatNum(p5, "baseOnBalls"))
+    p6_stat = float(getSepcificStatNum(p6, "baseOnBalls"))
+    p7_stat = float(getSepcificStatNum(p7, "baseOnBalls"))
     differnce1 = differnce1 + (p1_stat - BB)
-    differnce2 += differnce2 + (p2_stat - BB)
-    differnce3 += differnce3 + (p3_stat - BB)
+    differnce2 = differnce2 + (p2_stat - BB)
+    differnce3 = differnce3 + (p3_stat - BB)
+    differnce4 = differnce4 + (p4_stat - BB)
+    differnce5 = differnce5 + (p5_stat - BB)
+    differnce6 = differnce6 + (p6_stat - BB)
+    differnce7 = differnce7 + (p7_stat - BB)
     p1_stat = float(getSepcificStatNum(p1, "homeRuns"))
     p2_stat = float(getSepcificStatNum(p2, "homeRuns"))
     p3_stat = float(getSepcificStatNum(p3, "homeRuns"))
-    differnce1 = differnce1 + (p1_stat * 3)
-    differnce2 += differnce2 + (p2_stat * 3)
-    differnce3 += differnce3 + (p3_stat * 3)
+    p4_stat = float(getSepcificStatNum(p4, "homeRuns"))
+    p5_stat = float(getSepcificStatNum(p5, "homeRuns"))
+    p6_stat = float(getSepcificStatNum(p6, "homeRuns"))
+    p7_stat = float(getSepcificStatNum(p7, "homeRuns"))
+    differnce1 = differnce1 + (p1_stat)
+    differnce2 += differnce2 + (p2_stat)
+    differnce3 += differnce3 + (p3_stat)
+    differnce4 = differnce4 + (p4_stat)
+    differnce5 += differnce5 + (p5_stat)
+    differnce6 += differnce6 + (p6_stat )
+    differnce7 = differnce7 + (p7_stat )
     p1_stat = float(getSepcificStatNum(p1, "rbi"))
     p2_stat = float(getSepcificStatNum(p2, "rbi"))
     p3_stat = float(getSepcificStatNum(p3, "rbi"))
+    p4_stat = float(getSepcificStatNum(p4, "rbi"))
+    p5_stat = float(getSepcificStatNum(p5, "rbi"))
+    p6_stat = float(getSepcificStatNum(p6, "rbi"))
+    p7_stat = float(getSepcificStatNum(p7, "rbi"))
     differnce1 = differnce1 + (p1_stat - RBI)
     differnce2 += differnce2 + (p2_stat - RBI)
     differnce3 += differnce3 + (p3_stat - RBI)
+    differnce4 = differnce4 + (p4_stat - RBI)
+    differnce5 += differnce5 + (p5_stat - RBI)
+    differnce6 += differnce6 + (p6_stat - RBI)
+    differnce7 = differnce7 + (p7_stat - RBI)
     p1Count += (differnce1)
     p2Count += (differnce2)
     p3Count += (differnce3)
-    playerDiffList = [p1Count, p2Count, p3Count]
+    p4Count += (differnce4)
+    p5Count += (differnce5)
+    p6Count += (differnce6)
+    p7Count += (differnce7)
+    playerDiffList = [p1Count, p2Count, p3Count, p4Count, p5Count, p6Count, p7Count]
     biggest = max(playerDiffList)
     first = playerDiffList.index(biggest)
     firstPerson = input[first]
@@ -213,39 +316,71 @@ def fourth(input):
     p1Count = 0
     p2Count = 0
     p3Count = 0
+    p4Count = 0
+    p5Count = 0
+    p6Count = 0
     editedList = [None] * 5
-    output = [editedList,"string"]
+    output = [editedList, "string"]
     p1 = getplayer(input[0], "season", "hitting")
     p1_stat = float(getSepcificStatNum(p1, "avg"))
     p2 = getplayer(input[1], "season", "hitting")
     p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(input[2], "season", "hitting")
     p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
+    p4 = getplayer(input[3], "season", "hitting")
+    p4_stat = float(getSepcificStatNum(p4, "avg"))
+    p5 = getplayer(input[4], "season", "hitting")
+    p5_stat = float(getSepcificStatNum(p5, "avg"))
+    p6 = getplayer(input[5], "season", "hitting")
+    p6_stat = float(getSepcificStatNum(p6, "avg"))
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
+    differnce3 = (p3_stat - AVG) * 100
+    differnce4 = (p4_stat - AVG) * 100
+    differnce5 = (p5_stat - AVG) * 100
+    differnce6 = (p6_stat - AVG) * 100
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
     p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
+    p4_stat = float(getSepcificStatNum(p4, "baseOnBalls"))
+    p5_stat = float(getSepcificStatNum(p5, "baseOnBalls"))
     differnce1 = differnce1 + (p1_stat - BB)
-    differnce2 += differnce2 + (p2_stat - BB)
-    differnce3 += differnce3 + (p3_stat - BB)
+    differnce2 = differnce2 + (p2_stat - BB)
+    differnce3 = differnce3 + (p3_stat - BB)
+    differnce4 = differnce4 + (p4_stat - BB)
+    differnce5 = differnce5 + (p5_stat - BB)
+    differnce6 = differnce6 + (p6_stat - BB)
     p1_stat = float(getSepcificStatNum(p1, "homeRuns"))
     p2_stat = float(getSepcificStatNum(p2, "homeRuns"))
     p3_stat = float(getSepcificStatNum(p3, "homeRuns"))
-    differnce1 = differnce1 + ((p1_stat - HR)*3)
-    differnce2 += differnce2 + ((p2_stat - HR)*3)
-    differnce3 += differnce3 + ((p3_stat - HR)*3)
+    p4_stat = float(getSepcificStatNum(p4, "homeRuns"))
+    p5_stat = float(getSepcificStatNum(p5, "homeRuns"))
+    p6_stat = float(getSepcificStatNum(p6, "homeRuns"))
+    differnce1 = differnce1 + (p1_stat )
+    differnce2 += differnce2 + (p2_stat)
+    differnce3 += differnce3 + (p3_stat)
+    differnce4 = differnce4 + (p4_stat)
+    differnce5 += differnce5 + (p5_stat)
+    differnce6 += differnce6 + (p6_stat)
     p1_stat = float(getSepcificStatNum(p1, "rbi"))
     p2_stat = float(getSepcificStatNum(p2, "rbi"))
     p3_stat = float(getSepcificStatNum(p3, "rbi"))
+    p4_stat = float(getSepcificStatNum(p4, "rbi"))
+    p5_stat = float(getSepcificStatNum(p5, "rbi"))
+    p6_stat = float(getSepcificStatNum(p6, "rbi"))
     differnce1 = differnce1 + (p1_stat - RBI)
     differnce2 += differnce2 + (p2_stat - RBI)
     differnce3 += differnce3 + (p3_stat - RBI)
+    differnce4 = differnce4 + (p4_stat - RBI)
+    differnce5 += differnce5 + (p5_stat - RBI)
+    differnce6 += differnce6 + (p6_stat - RBI)
     p1Count += (differnce1)
     p2Count += (differnce2)
     p3Count += (differnce3)
-    playerDiffList = [p1Count, p2Count, p3Count]
+    p4Count += (differnce4)
+    p5Count += (differnce5)
+    p6Count += (differnce6)
+    playerDiffList = [p1Count, p2Count, p3Count, p4Count, p5Count, p6Count]
     biggest = max(playerDiffList)
     first = playerDiffList.index(biggest)
     firstPerson = input[first]
@@ -268,39 +403,61 @@ def fith(input):
     p1Count = 0
     p2Count = 0
     p3Count = 0
+    p4Count = 0
+    p5Count = 0
     editedList = [None] * 4
-    output = [editedList,"string"]
+    output = [editedList, "string"]
     p1 = getplayer(input[0], "season", "hitting")
     p1_stat = float(getSepcificStatNum(p1, "avg"))
     p2 = getplayer(input[1], "season", "hitting")
     p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(input[2], "season", "hitting")
     p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
+    p4 = getplayer(input[3], "season", "hitting")
+    p4_stat = float(getSepcificStatNum(p4, "avg"))
+    p5 = getplayer(input[4], "season", "hitting")
+    p5_stat = float(getSepcificStatNum(p5, "avg"))
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
+    differnce3 = (p3_stat - AVG) * 100
+    differnce4 = (p4_stat - AVG) * 100
+    differnce5 = (p5_stat - AVG) * 100
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
     p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
+    p4_stat = float(getSepcificStatNum(p4, "baseOnBalls"))
+    p5_stat = float(getSepcificStatNum(p5, "baseOnBalls"))
     differnce1 = differnce1 + (p1_stat - BB)
-    differnce2 += differnce2 + (p2_stat - BB)
-    differnce3 += differnce3 + (p3_stat - BB)
+    differnce2 = differnce2 + (p2_stat - BB)
+    differnce3 = differnce3 + (p3_stat - BB)
+    differnce4 = differnce4 + (p4_stat - BB)
+    differnce5 = differnce5 + (p5_stat - BB)
     p1_stat = float(getSepcificStatNum(p1, "homeRuns"))
     p2_stat = float(getSepcificStatNum(p2, "homeRuns"))
     p3_stat = float(getSepcificStatNum(p3, "homeRuns"))
-    differnce1 = differnce1 + (p1_stat * 3)
-    differnce2 += differnce2 + (p2_stat * 3)
-    differnce3 += differnce3 + (p3_stat * 3)
+    p4_stat = float(getSepcificStatNum(p4, "homeRuns"))
+    p5_stat = float(getSepcificStatNum(p5, "homeRuns"))
+    differnce1 = differnce1 + (p1_stat )
+    differnce2 += differnce2 + (p2_stat)
+    differnce3 += differnce3 + (p3_stat)
+    differnce4 = differnce4 + (p4_stat)
+    differnce5 += differnce5 + (p5_stat)
     p1_stat = float(getSepcificStatNum(p1, "rbi"))
     p2_stat = float(getSepcificStatNum(p2, "rbi"))
     p3_stat = float(getSepcificStatNum(p3, "rbi"))
+    p4_stat = float(getSepcificStatNum(p4, "rbi"))
+    p5_stat = float(getSepcificStatNum(p5, "rbi"))
     differnce1 = differnce1 + (p1_stat - RBI)
     differnce2 += differnce2 + (p2_stat - RBI)
     differnce3 += differnce3 + (p3_stat - RBI)
+    differnce4 = differnce4 + (p4_stat - RBI)
+    differnce5 += differnce5 + (p5_stat - RBI)
     p1Count += (differnce1)
     p2Count += (differnce2)
     p3Count += (differnce3)
-    playerDiffList = [p1Count, p2Count, p3Count]
+    p4Count += (differnce4)
+    p5Count += (differnce5)
+    playerDiffList = [p1Count, p2Count, p3Count, p4Count, p5Count]
     biggest = max(playerDiffList)
     first = playerDiffList.index(biggest)
     firstPerson = input[first]
@@ -323,39 +480,51 @@ def six(input):
     p1Count = 0
     p2Count = 0
     p3Count = 0
+    p4Count = 0
+    p5Count = 0
     editedList = [None] * 3
-    output = [editedList,"string"]
+    output = [editedList, "string"]
     p1 = getplayer(input[0], "season", "hitting")
     p1_stat = float(getSepcificStatNum(p1, "avg"))
     p2 = getplayer(input[1], "season", "hitting")
     p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(input[2], "season", "hitting")
     p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
+    p4 = getplayer(input[3], "season", "hitting")
+    p4_stat = float(getSepcificStatNum(p4, "avg"))
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
+    differnce3 = (p3_stat - AVG) * 100
+    differnce4 = (p4_stat - AVG) * 100
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
     p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
+    p4_stat = float(getSepcificStatNum(p4, "baseOnBalls"))
     differnce1 = differnce1 + (p1_stat - BB)
-    differnce2 += differnce2 + (p2_stat - BB)
-    differnce3 += differnce3 + (p3_stat - BB)
+    differnce2 = differnce2 + (p2_stat - BB)
+    differnce3 = differnce3 + (p3_stat - BB)
+    differnce4 = differnce4 + (p4_stat - BB)
     p1_stat = float(getSepcificStatNum(p1, "homeRuns"))
     p2_stat = float(getSepcificStatNum(p2, "homeRuns"))
     p3_stat = float(getSepcificStatNum(p3, "homeRuns"))
-    differnce1 = differnce1 + (p1_stat - HR)
-    differnce2 += differnce2 + (p2_stat - HR)
-    differnce3 += differnce3 + (p3_stat - HR)
+    p4_stat = float(getSepcificStatNum(p4, "homeRuns"))
+    differnce1 = differnce1 + (p1_stat)
+    differnce2 += differnce2 + (p2_stat)
+    differnce3 += differnce3 + (p3_stat)
+    differnce4 = differnce4 + (p4_stat)
     p1_stat = float(getSepcificStatNum(p1, "rbi"))
     p2_stat = float(getSepcificStatNum(p2, "rbi"))
     p3_stat = float(getSepcificStatNum(p3, "rbi"))
+    p4_stat = float(getSepcificStatNum(p4, "rbi"))
     differnce1 = differnce1 + (p1_stat - RBI)
     differnce2 += differnce2 + (p2_stat - RBI)
     differnce3 += differnce3 + (p3_stat - RBI)
+    differnce4 = differnce4 + (p4_stat - RBI)
     p1Count += (differnce1)
     p2Count += (differnce2)
     p3Count += (differnce3)
-    playerDiffList = [p1Count, p2Count, p3Count]
+    p4Count += (differnce4)
+    playerDiffList = [p1Count, p2Count, p3Count, p4Count]
     biggest = max(playerDiffList)
     first = playerDiffList.index(biggest)
     firstPerson = input[first]
@@ -386,9 +555,9 @@ def seven(input):
     p2_stat = float(getSepcificStatNum(p2, "avg"))
     p3 = getplayer(input[2], "season", "hitting")
     p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
-    differnce3 = p3_stat - AVG
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
+    differnce3 = (p3_stat - AVG) * 100
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
     p3_stat = float(getSepcificStatNum(p3, "baseOnBalls"))
@@ -441,8 +610,8 @@ def eight(input):
     p2_stat = float(getSepcificStatNum(p2, "avg"))
 ##    p3 = getplayer(input[2], "season", "hitting")
   ##  p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
-    differnce2 = p2_stat - AVG
+    differnce1 = (p1_stat - AVG) * 100
+    differnce2 = (p2_stat - AVG) * 100
     ##differnce3 = p3_stat - AVG
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))
     p2_stat = float(getSepcificStatNum(p2, "baseOnBalls"))
@@ -496,7 +665,7 @@ def nine(input):
    ## p2_stat = float(getSepcificStatNum(p2, "avg"))
    ## p3 = getplayer(input[2], "season", "hitting")
    ## p3_stat = float(getSepcificStatNum(p3, "avg"))
-    differnce1 = p1_stat - AVG
+    differnce1 = (p1_stat - AVG) * 100
    ## differnce2 = p2_stat - AVG
    ## differnce3 = p3_stat - AVG
     p1_stat = float(getSepcificStatNum(p1, "baseOnBalls"))

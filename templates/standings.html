@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block content %}
+<style>
+    table, th, td {
+        border:1px solid black;
+    }
+</style>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Season Standings</h3>
+    <button>Button</button>fd
+    <div class="box">
+        {{data|safe}}
+        <table style="width:100%">
+            <tr>
+                <th>Name</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Win%</th>
+                <th>GB</th>
+            </tr>
+            <tr>
+                <th>{{name1}}</th>
+                <th>{{w1}}</th>
+                <th>{{l1}}</th>
+                <th>{{p1}}%</th>
+                <th>{{gb1}}</th>
+            </tr>
+            <tr>
+                <th>{{name2}}</th>
+                <th>{{w2}}</th>
+                <th>{{l2}}</th>
+                <th>{{p2}}%</th>
+                <th>{{gb2}}</th>
+            </tr>
+            <tr>
+                <th>{{name3}}</th>
+                <th>{{w3}}</th>
+                <th>{{l3}}</th>
+                <th>{{p3}}%</th>
+                <th>{{gb3}}</th>
+            </tr>
+            <tr>
+                <th>{{name4}}</th>
+                <th>{{w4}}</th>
+                <th>{{l4}}</th>
+                <th>{{p4}}%</th>
+                <th>{{gb4}}</th>
+            </tr>
+            <tr>
+                <th>{{name5}}</th>
+                <th>{{w5}}</th>
+                <th>{{l5}}</th>
+                <th>{{p5}}%</th>
+                <th>{{gb5}}</th>
+            </tr>
+
+        </table>
+    </div>
+</div>
+{% endblock %}

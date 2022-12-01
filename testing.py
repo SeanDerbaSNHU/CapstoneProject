@@ -6,15 +6,16 @@ import Function
 from flask_table import Table, Col
 
 def getdata():
-    logger = logging.getLogger('statsapi')
-    logger.setLevel(logging.DEBUG)
-    rootLogger = logging.getLogger()
-    rootLogger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    formatter = logging.Formatter("%(asctime)s - %(levelname)8s - %(name)s(%(thread)s) - %(message)s")
-    ch.setFormatter(formatter)
-    rootLogger.addHandler(ch)
-    ##print(statsapi.standings(leagueId=104,date='10/1/2022') )
+   ## logger = logging.getLogger('statsapi')
+   ## logger.setLevel(logging.DEBUG)
+   ## rootLogger = logging.getLogger()
+   ## rootLogger.setLevel(logging.DEBUG)
+   ## ch = logging.StreamHandler()
+   ## formatter = logging.Formatter("%(asctime)s - %(levelname)8s - %(name)s(%(thread)s) - %(message)s")
+   ## ch.setFormatter(formatter)
+   ## rootLogger.addHandler(ch)
+    standings = Function.getStanding("103")
+    print(standings )
     ##print(statsapi.standings(leagueId=103, date='10/1/2022'))
     print ("type name of player1")
     name = 'Aaron Judge'
@@ -28,8 +29,16 @@ def getdata():
     stats = Function.getplayer(name, careerOrSeason, pos)
     final = Function.getSepcificStatNum(stats, "homeRuns")
     testing = ["Aaron Judge", "Anthony Rizzo", "Kyle Higashioka","Andrew Benintendi", "Aaron Hicks","Jose Trevino","Tim Locastro","Josh Donaldson", "Harrison Bader"]
-    Function.createLinup(testing)
+    ##Function.createLinup(testing)
+
+
+    team = Function.getTeam("nyy")
+    teamId = Function.getTeamId("nyy")
+    roster = Function.getRoster("142")
     print(stats)
+    print(roster)
+    print(team)
+    print(teamId)
     print(final)
 
     return stats
