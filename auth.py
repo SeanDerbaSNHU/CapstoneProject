@@ -6,10 +6,13 @@ from Function import createLinup, getplayerCareer
 
 auth = Blueprint('auth', __name__)
 
+pTemp = 'test'
+pList = []
 
 # use decorators to link the function to a url
 @auth.route('/')
 def index():
+    pList = []
     stat_dict = getdata()
     fullname = stat_dict['first_name'] + " " + stat_dict['last_name']
     stat_dict = stat_dict['stats'][0]['stats']
@@ -23,11 +26,13 @@ def index():
 
 @auth.route('/welcome')
 def welcome():
+    pList = []
     return render_template('welcome.html')  # render a template
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    pList = []
     error = None
     if request.method == 'POST':
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
@@ -39,22 +44,24 @@ def login():
 
 @auth.route('/register')
 def register():
+    pList = []
     from app import db
     return render_template('register.html')
 
 
 @auth.route('/logout')
 def logout():
+    pList = []
     return 'Logout'
 
 
 @auth.route('/profile')
 def profile():
+    pList = []
     return render_template('profile.html')
 
 
-pTemp = 'test'
-pList = []
+
 
 
 @auth.route('/lineup', methods=['GET', 'POST'])
@@ -120,6 +127,12 @@ def lineup():
                 return render_template('lineup.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
                                        homeruns=hr, strikeouts=so, rbi=RBI, p1 = pList[0], p2 = pList[1], p3 = pList[2], p4 = pList[3], p5 = pList[4],
                                        p6 = pList[5], p7 = pList[6], p8 = pList[7], p9 = pList[8])
+        elif request.form['btn_identifier'] == 'submit':
+            if (1):
+                return redirect('/sortedLineup')
+            else:
+                #return error statement
+                return render_template('lineup.html', error = error)
         else:
             return render_template('lineup.html', error = error)
 
@@ -128,4 +141,13 @@ def lineup():
 
 @auth.route('/standings')
 def standings():
+    pList = []
     return render_template('standings.html')
+
+@auth.route('/sortedLineup')
+def sortedLineup():
+    #use sorting function to sort pList
+    #Display sorted pList
+    sList = createLinup(pList)
+    return render_template('sortedLineup.html', p1 = sList[0], p2 = sList[1], p3 = sList[2], p4 = sList[3], p5 = sList[4], p6 = sList[5], p7 = sList[6], p8 = sList[7], p9 = sList[8])
+

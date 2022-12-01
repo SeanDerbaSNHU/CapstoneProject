@@ -19,7 +19,18 @@
             <button class="button is-block is-info is-large is-fullwidth">Add Player</button>
             <h1>{{p1}}</h1>
             <h1>{{p2}}</h1>
+            <h1>{{p3}}</h1>
+            <h1>{{p4}}</h1>
+            <h1>{{p5}}</h1>
+            <h1>{{p6}}</h1>
+            <h1>{{p7}}</h1>
+            <h1>{{p8}}</h1>
+            <h1>{{p9}}</h1>
         </form>
     </div>
+    <form method="POST" action="/lineup">
+        <input type="hidden" name="btn_identifier" value="submit" />
+        <button class="button is-block is-info is-large is-fullwidth">Submit Lineup</button>
+    </form>
 </div>
 {% endblock %}
