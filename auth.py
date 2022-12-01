@@ -24,8 +24,11 @@ def index():
 
 def standings():
     error = None
-    stat_dict = Function.getStanding()
-    stats = stat_dict[201]
+    num = 201
+    stat_dict = Function.getStanding("103")
+    if request.method == 'POST':
+        num = 202
+    stats = stat_dict[num]
     print(stats)
     team1 = stats['teams'][0]
     name1 = team1['name']

@@ -1,4 +1,5 @@
 import statsapi
+from datetime import datetime
 import logging
 ##League year by year averages for 30 plate apperances(also the average)
 
@@ -13,14 +14,27 @@ BB = 3.09
 def getplayer(name, yearlyOrCareer, pos):
     #stat = statsapi.player_stats(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer)
     stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer, sportId=1)
-    #stat = stat.split()[7:];
-    return stat;
+    #stat = stat.split()[7:]
+    return stat
+
+def getTeamId(teamName):
+    team = statsapi.lookup_team(teamName)
+    teamID = team[0]['id']
+    return teamID
+
+def getRoster(teamId):
+    roster = statsapi.roster(teamId, rosterType=None, season=datetime.now().year, date=None)
+    return roster
+
+def getTeam(teamName):
+    team = statsapi.lookup_team(teamName)
+    return team
 
 def getplayerCareer(name):
     #stat = statsapi.player_stats(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer)
     stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), "hitting", "career", sportId=1)
     #stat = stat.split()[7:];
-    return stat;
+    return stat
 
 def getSepcificStat(stats, statName):
     index = 0
@@ -40,8 +54,8 @@ def getSepcificStatNum(stats, statName):
     final = stats[statName]
     return final
 
-def getStanding():
-    standings = statsapi.standings_data(leagueId="103,104", division="all", include_wildcard=True, season=None, standingsTypes=None, date=None)
+def getStanding(leagueId):
+    standings = statsapi.standings_data(leagueId, division="all", include_wildcard=True, season=None, standingsTypes=None, date=None)
    ## standings = statsapi.standings(leagueId=103, date='10/1/2022')
     return standings
 
