@@ -24,6 +24,18 @@ def index():
     hr = stat_dict['homeRuns']
     so = stat_dict['strikeOuts']
     RBI = stat_dict['rbi']
+    if request.method == 'POST':
+        if request.form['btn_identifier'] == 'look':
+            pName = request.form['playerName']
+            stat_dict = getplayerCareer(pName)
+            fullname = stat_dict['first_name'] + " " + stat_dict['last_name']
+            stat_dict = stat_dict['stats'][0]['stats']
+            gamesPlayed = stat_dict['gamesPlayed']
+            batAvg = stat_dict['avg']
+            hr = stat_dict['homeRuns']
+            so = stat_dict['strikeOuts']
+            RBI = stat_dict['rbi']
+            return render_template('index.html', name=fullname, gamePlay=gamesPlayed, AVG=batAvg, homeRun=hr, SO=so,rbi=RBI)
     return render_template('index.html', name = fullname, gamePlay = gamesPlayed, AVG = batAvg,homeRun = hr, SO =so, rbi = RBI)  # return a string
 
 
@@ -187,10 +199,7 @@ def lineup():
     return render_template('lineup.html', error = error)
 
 
-@auth.route('/standings')
-def standings():
-    pList = []
-    return render_template('standings.html')
+
 
 @auth.route('/sortedLineup')
 def sortedLineup():
