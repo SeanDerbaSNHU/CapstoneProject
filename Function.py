@@ -18,6 +18,7 @@ def getplayer(name, yearlyOrCareer, pos):
     return stat
 
 def getTeamId(teamName):
+
     team = statsapi.lookup_team(teamName)
     teamID = team[0]['id']
     return teamID
@@ -25,6 +26,13 @@ def getTeamId(teamName):
 def getRoster(teamId):
     roster = statsapi.roster(teamId, rosterType=None, season=datetime.now().year, date=None)
     return roster
+
+def splitRoster(roster):
+    endres = []
+    endres = range(25)
+    endres = list(roster.split("\n"))
+    return endres
+
 
 def getTeam(teamName):
     team = statsapi.lookup_team(teamName)
@@ -35,13 +43,6 @@ def getplayerCareer(name):
     stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), "hitting", "career", sportId=1)
     #stat = stat.split()[7:];
     return stat
-
-
-def getplayerCareer(name):
-    #stat = statsapi.player_stats(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer)
-    stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), "hitting", "career", sportId=1)
-    #stat = stat.split()[7:];
-    return stat;
 
 def getSepcificStat(stats, statName):
     index = 0
@@ -738,4 +739,3 @@ def createLinup(playerList):
     playerList = holder[0]
     lineup[8] = holder[1]
     print(lineup)
-    return lineup
