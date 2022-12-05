@@ -40,9 +40,12 @@ def getTeam(teamName):
 
 def getplayerCareer(name):
     #stat = statsapi.player_stats(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), pos, yearlyOrCareer)
-    stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), "hitting", "career", sportId=1)
-    #stat = stat.split()[7:];
-    return stat
+    try:
+        stat = statsapi.player_stat_data(next(x['id'] for x in statsapi.get('sports_players', {'season': 2022, 'gameType': 'W'})['people'] if x['fullName'] == name), "hitting", "career", sportId=1)
+        return stat
+    except:
+        return None;
+
 
 def getSepcificStat(stats, statName):
     index = 0
