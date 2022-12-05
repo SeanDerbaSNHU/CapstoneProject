@@ -27,6 +27,13 @@ def getRoster(teamId):
     roster = statsapi.roster(teamId, rosterType=None, season=datetime.now().year, date=None)
     return roster
 
+def splitRoster(roster):
+    endres = []
+    endres = range(25)
+    endres = list(roster.split("\n"))
+    return endres
+
+
 def getTeam(teamName):
     team = statsapi.lookup_team(teamName)
     return team

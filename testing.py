@@ -35,6 +35,7 @@ def getdata():
     team = Function.getTeam("nyy")
     teamId = Function.getTeamId("nyy")
     roster = Function.getRoster("142")
+    roster = Function.splitRoster(roster)
     print(stats)
     print(roster)
     print(team)
