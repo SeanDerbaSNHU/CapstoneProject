@@ -3,7 +3,7 @@ from flask import Flask, render_template, Blueprint, redirect, url_for, request
 from testing import getdata
 import Function
 
-from Function import createLinup, getplayerCareer
+from Function import createLinup, getplayerCareer, getTeamId, getRoster, splitRoster, getNames
 
 
 
@@ -208,8 +208,6 @@ def lineup():
     return render_template('lineup.html', error = error)
 
 
-
-
 @auth.route('/sortedLineup')
 def sortedLineup():
     #use sorting function to sort pList
@@ -217,3 +215,18 @@ def sortedLineup():
     sList = createLinup(pList)
     return render_template('sortedLineup.html', p1 = sList[0], p2 = sList[1], p3 = sList[2], p4 = sList[3], p5 = sList[4], p6 = sList[5], p7 = sList[6], p8 = sList[7], p9 = sList[8])
 
+@auth.route('/team/<name>')
+def team(name):
+    id = getTeamId(name)
+    roster = getRoster(id)
+    tl = splitRoster(roster)
+    names = getNames(roster)
+    return render_template('team.html', tName = name, nb1 = tl[0][0], nm1 = names[0], p1 = tl[0][2],
+                           nb2 = tl[1][0], nm2 = names[1], p2 = tl[1][2],
+                           nb3 = tl[2][0], nm3 = names[2], p3 = tl[2][2],
+                           nb4 = tl[3][0], nm4 = names[3], p4 = tl[3][2],
+                           nb5 = tl[4][0], nm5 = names[4], p5 = tl[4][2],
+                           nb6 = tl[5][0], nm6 = names[5], p6 = tl[5][2],
+                           nb7 = tl[6][0], nm7 = names[6], p7 = tl[6][2],
+                           nb8 = tl[7][0], nm8 = names[7], p8 = tl[7][2],
+                           nb9 = tl[8][0], nm9 = names[8], p9 = tl[8][2])

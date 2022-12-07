@@ -31,7 +31,23 @@ def splitRoster(roster):
     endres = []
     endres = range(25)
     endres = list(roster.split("\n"))
-    return endres
+    x = []
+    for item in endres:
+        s = list(item.split(" "))
+        x.append(s)
+    return x
+
+
+def getNames(roster):
+    l = splitRoster(roster)
+    x = []
+    for item in l:
+        del item[0:4]
+        str = " "
+        temp = str.join(item)
+        x.append(temp)
+
+    return x
 
 
 def getTeam(teamName):
