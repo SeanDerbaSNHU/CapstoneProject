@@ -13,30 +13,38 @@ pTemp = 'test'
 pList = []
 
 # use decorators to link the function to a url
-@auth.route('/')
+@auth.route('/', methods=['GET', 'POST'])
 def index():
-    pList = []
-    stat_dict = getdata()
-    fullname = stat_dict['first_name'] + " " + stat_dict['last_name']
-    stat_dict = stat_dict['stats'][0]['stats']
-    gamesPlayed = stat_dict['gamesPlayed']
-    batAvg = stat_dict['avg']
-    hr = stat_dict['homeRuns']
-    so = stat_dict['strikeOuts']
-    RBI = stat_dict['rbi']
+    error = None
+    # pList = []
+    pName = ''
+    fullname = ''
+    gamesPlayed = ''
+    batAvg = ''
+    hr = ''
+    so = ''
+    RBI = ''
+
     if request.method == 'POST':
-        if request.form['btn_identifier'] == 'look':
+        if request.form['btn_identifier'] == 'search':
             pName = request.form['playerName']
-            stat_dict = getplayerCareer(pName)
-            fullname = stat_dict['first_name'] + " " + stat_dict['last_name']
-            stat_dict = stat_dict['stats'][0]['stats']
-            gamesPlayed = stat_dict['gamesPlayed']
-            batAvg = stat_dict['avg']
-            hr = stat_dict['homeRuns']
-            so = stat_dict['strikeOuts']
-            RBI = stat_dict['rbi']
-            return render_template('index.html', name=fullname, gamePlay=gamesPlayed, AVG=batAvg, homeRun=hr, SO=so,rbi=RBI)
-    return render_template('index.html', name = fullname, gamePlay = gamesPlayed, AVG = batAvg,homeRun = hr, SO =so, rbi = RBI)  # return a string
+            stats = getplayerCareer(pName)
+            if(stats != None):
+                fullname = stats['first_name'] + " " + stats['last_name']
+                stats = stats['stats'][0]['stats']
+                gamesPlayed = stats['gamesPlayed']
+                batAvg = stats['avg']
+                hr = stats['homeRuns']
+                so = stats['strikeOuts']
+                RBI = stats['rbi']
+                global pTemp
+                pTemp = fullname
+            return render_template('index.html', error=error, name=fullname, gamesPlayed=gamesPlayed, batAvg=batAvg,
+                                   homeruns=hr, strikeouts=so, rbi=RBI)
+        else:
+            return render_template('index.html', error=error)
+
+    return render_template('index.html', error=error)  # return a string
 
 
 
@@ -142,15 +150,16 @@ def lineup():
         if request.form['btn_identifier'] == 'search':
             pName = request.form['playerName']
             stats = getplayerCareer(pName)
-            fullname = stats['first_name'] + " " + stats['last_name']
-            stats = stats['stats'][0]['stats']
-            gamesPlayed = stats['gamesPlayed']
-            batAvg = stats['avg']
-            hr = stats['homeRuns']
-            so = stats['strikeOuts']
-            RBI = stats['rbi']
-            global pTemp
-            pTemp = fullname
+            if(stats != None):
+                fullname = stats['first_name'] + " " + stats['last_name']
+                stats = stats['stats'][0]['stats']
+                gamesPlayed = stats['gamesPlayed']
+                batAvg = stats['avg']
+                hr = stats['homeRuns']
+                so = stats['strikeOuts']
+                RBI = stats['rbi']
+                global pTemp
+                pTemp = fullname
             return render_template('lineup.html', error = error, name = fullname, gamesPlayed = gamesPlayed, batAvg = batAvg, homeruns = hr, strikeouts = so, rbi = RBI)
         elif request.form['btn_identifier'] == 'add':
             #pName = request.form['playerName']
