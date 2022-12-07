@@ -15,7 +15,7 @@ def getdata():
    ## ch.setFormatter(formatter)
    ## rootLogger.addHandler(ch)
     standings = Function.getStanding("103")
-    print(standings )
+    print(standings)
     ##print(statsapi.standings(leagueId=103, date='10/1/2022'))
     print ("type name of player1")
     name = 'Aaron Judge'
@@ -36,6 +36,7 @@ def getdata():
     teamId = Function.getTeamId("nyy")
     roster = Function.getRoster("142")
     roster = Function.splitRoster(roster)
+    print(Function.getStanding("104"))
     print(stats)
     print(roster)
     print(team)

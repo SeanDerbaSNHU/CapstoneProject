@@ -11,10 +11,13 @@ auth = Blueprint('auth', __name__)
 
 pTemp = 'test'
 pList = []
+change = 0
 
 # use decorators to link the function to a url
 @auth.route('/', methods=['GET', 'POST'])
 def index():
+    getdata()
+
     error = None
     # pList = []
     pName = ''
@@ -48,16 +51,51 @@ def index():
 
 
 
-@auth.route('/standings')
+@auth.route('/standings', methods=['GET', 'POST','EAST', 'WEST', 'CENTRAL', 'CHANGE'])
 
 def standings():
+    global change
     error = None
-    num = 201
-    stat_dict = Function.getStanding("103")
-    if request.method == 'POST':
-        num = 202
+    league = "American League East"
+    num = 200
+    id = '103'
+    print(request.args.to_dict())
+    if request.method == 'GET' and ('mode' in request.args.to_dict()):
+        if request.args.to_dict()['mode'] == 'CHANGE':
+            if(change == 0 ):
+                change = 1
+            else:
+                change = 0
+        if request.args.to_dict()['mode'] == 'EAST':
+            if(change == 0):
+                num = 201
+                id = '103'
+                league = "American League East"
+            else:
+                num = 204
+                id = '104'
+                league = "National League East"
+        if request.args.to_dict()['mode'] == 'CENTRAL':
+            if(change == 0):
+                num = 202
+                id = '103'
+                league = "American League Central"
+            else:
+                num = 205
+                id = '104'
+                league = "National League Central"
+        if request.args.to_dict()['mode'] == 'WEST':
+            if(change == 0):
+                num = 200
+                id = '103'
+                league = "American League West"
+            else:
+                num = 203
+                id = '104'
+                league = "National League West"
+    stat_dict = Function.getStanding(id)
     stats = stat_dict[num]
-    print(stats)
+    #print(stats)
     team1 = stats['teams'][0]
     name1 = team1['name']
     w1 = team1['w']
@@ -88,7 +126,7 @@ def standings():
     l5 = team5['l']
     p5 = round((team5['w'] / (team5['w'] + team5['l'])) * 100, 2)
     gb5 = team5['gb']
-    return render_template('standings.html', data= "<h1> American League East </h1>", error = error, name1 = name1, w1 = w1, l1 = l1, p1 = p1, gb1 = gb1, name2 = name2, w2 = w2, l2 = l2, p2 = p2, gb2 = gb2, name3 = name3, w3 = w3, l3 = l3, p3 = p3, gb3 = gb3, name4 = name4, w4 = w4, l4 = l4, p4 = p4, gb4 = gb4,name5 = name5, w5 = w5, l5 = l5, p5 = p5, gb5 = gb5)
+    return render_template('standings.html', data= "<h1>" + league + "</h1>", error = error, name1 = name1, w1 = w1, l1 = l1, p1 = p1, gb1 = gb1, name2 = name2, w2 = w2, l2 = l2, p2 = p2, gb2 = gb2, name3 = name3, w3 = w3, l3 = l3, p3 = p3, gb3 = gb3, name4 = name4, w4 = w4, l4 = l4, p4 = p4, gb4 = gb4,name5 = name5, w5 = w5, l5 = l5, p5 = p5, gb5 = gb5)
 
 
 
