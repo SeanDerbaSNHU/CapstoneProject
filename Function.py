@@ -758,3 +758,4 @@ def createLinup(playerList):
     playerList = holder[0]
     lineup[8] = holder[1]
     print(lineup)
+    return lineup
