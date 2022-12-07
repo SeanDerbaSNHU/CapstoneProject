@@ -9,6 +9,19 @@
 <div class="column is-4 is-offset-4">
     <h3 class="title">Season Standings</h3>
     <div class="box">
+        <form method="EAST" action="/standings">
+            <input type="hidden" name="mode" value="EAST" />
+            <button class="button is-block is-info is-large is-fullwidth">East</button> </form>
+            <form method="CENTRAL" action="/standings">
+            <input type="hidden" name="mode" value="CENTRAL" />
+                <button class="button is-block is-info is-large is-fullwidth">Central</button></form>
+            <form method="WEST" action="/standings">
+            <input type="hidden" name="mode" value="WEST" />
+                <button class="button is-block is-info is-large is-fullwidth">West</button></form>
+          <form method="CHANGE" action="/standings">
+            <input type="hidden" name="mode" value="CHANGE" />
+                <button class="button is-block is-info is-large is-fullwidth">Change League</button></form>
+    <div class="box">
         {{data|safe}}
         <table style="width:100%">
             <tr>
