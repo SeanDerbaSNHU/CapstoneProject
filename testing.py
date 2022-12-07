@@ -3,7 +3,7 @@ from abc import ABC
 import statsapi
 import logging
 import Function
-from flask_table import Table, Col
+## from flask_table import Table, Col
 
 def getdata():
    ## logger = logging.getLogger('statsapi')
